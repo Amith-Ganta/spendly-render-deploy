@@ -1,0 +1,133 @@
+{# expects:
+   user        — dict: name, email, member_since, initials
+   stats       — dict: total_spent, transaction_count, top_category
+   transactions — list of dicts: id, date, description, category, amount
+   categories  — list of dicts: name, total, pct (int 0–100)
+#}
+{% extends "base.html" %}
+
+{% block title %}Profile — Spendly{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+    <!-- User info card -->
+    <div class="profile-header">
+        <div class="profile-avatar">{{ user.initials }}</div>
+        <div>
+            <p class="profile-name">{{ user.name }}</p>
+            <p class="profile-meta">{{ user.email }}</p>
+            <p class="profile-meta">Member since {{ user.member_since }}</p>
+        </div>
+        <div class="profile-header__actions">
+            <a href="{{ url_for('add_expense') }}" class="btn-primary profile-add-cta">+ Add Expense</a>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}<div class="filter-flash">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    <section class="filter-bar" aria-label="Date range filter">
+        <div class="filter-bar__presets" role="group">
+            <a class="filter-preset {% if active_preset == 'month' %}filter-preset--active{% endif %}"
+               href="{{ url_for('profile', date_from=presets.month[0], date_to=presets.month[1]) }}">This Month</a>
+            <a class="filter-preset {% if active_preset == '3months' %}filter-preset--active{% endif %}"
+               href="{{ url_for('profile', date_from=presets['3months'][0], date_to=presets['3months'][1]) }}">Last 3 Months</a>
+            <a class="filter-preset {% if active_preset == '6months' %}filter-preset--active{% endif %}"
+               href="{{ url_for('profile', date_from=presets['6months'][0], date_to=presets['6months'][1]) }}">Last 6 Months</a>
+            <a class="filter-preset {% if active_preset == 'all' %}filter-preset--active{% endif %}"
+               href="{{ url_for('profile') }}">All Time</a>
+        </div>
+        <form class="filter-bar__custom {% if active_preset == 'custom' %}filter-bar__custom--active{% endif %}"
+              method="GET" action="{{ url_for('profile') }}">
+            <label class="filter-field">
+                <span>From</span>
+                <input type="date" name="date_from" value="{{ date_from }}">
+            </label>
+            <label class="filter-field">
+                <span>To</span>
+                <input type="date" name="date_to" value="{{ date_to }}">
+            </label>
+            <button type="submit" class="btn-primary filter-apply">Apply</button>
+        </form>
+    </section>
+
+    <!-- Summary stats -->
+    <h2 class="section-title">Overview</h2>
+    <div class="stats-row">
+        <div class="stat-card">
+            <p class="stat-value">₹{{ stats.total_spent }}</p>
+            <p class="stat-label">Total Spent</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value">{{ stats.transaction_count }}</p>
+            <p class="stat-label">Transactions</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value">{{ stats.top_category }}</p>
+            <p class="stat-label">Top Category</p>
+        </div>
+    </div>
+
+    <!-- Transaction history -->
+    <h2 class="section-title">Recent Transactions</h2>
+    <div class="table-wrapper">
+        <table class="transactions-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th class="col-amount">Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if transactions %}
+                {% for tx in transactions %}
+                <tr>
+                    <td>{{ tx.date }}</td>
+                    <td>{{ tx.description }}</td>
+                    <td><span class="badge badge--{{ tx.category | lower }}">{{ tx.category }}</span></td>
+                    <td class="col-amount">₹{{ tx.amount }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_expense', id=tx.id) }}">Edit</a>
+                        <form method="POST" action="{{ url_for('delete_expense', id=tx.id) }}"
+                              style="display:inline"
+                              onsubmit="return confirm('Delete this expense?')">
+                            <button type="submit" class="btn-delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr><td colspan="5" class="empty-state">No transactions in this range.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Category breakdown -->
+    <h2 class="section-title">Spending by Category</h2>
+    <div class="breakdown-list">
+        {% for cat in categories %}
+        <div class="breakdown-row">
+            <span class="breakdown-label">{{ cat.name }}</span>
+            <div class="breakdown-track">
+                <div class="breakdown-fill" style="width: {{ cat.pct }}%"></div>
+            </div>
+            <span class="breakdown-amount">₹{{ cat.total }}</span>
+        </div>
+        {% endfor %}
+        {% if not categories %}
+        <p class="empty-state">No category data for this range.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

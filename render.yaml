@@ -1,0 +1,25 @@
+# Render Blueprint for Spendly (Flask + SQLite).
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Free tier notes:
+#   - The instance sleeps after ~15 min of inactivity; the next request
+#     triggers a cold start (~30-60s) before the app responds.
+#   - The disk is ephemeral. SQLite data (spendly.db) is recreated from
+#     init_db()/seed_db() on every boot, so user-entered expenses reset
+#     on each redeploy or cold start. This is acceptable for a demo.
+services:
+  - type: web
+    name: spendly
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash start.sh
+    healthCheckPath: /login
+    envVars:
+      # Generated once by Render and kept stable, so Flask session
+      # cookies stay valid across restarts and both workers.
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: "3.12.6"
