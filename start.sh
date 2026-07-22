@@ -11,7 +11,7 @@ set -e
 
 python -c "from database.db import init_db, seed_db; init_db(); seed_db()"
 
-exec gunicorn app:app \
+exec gunicorn wsgi:app \
   --bind "0.0.0.0:${PORT:-5001}" \
   --workers 2 \
   --timeout 60 \

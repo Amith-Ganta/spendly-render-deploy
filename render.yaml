@@ -14,7 +14,9 @@ services:
     plan: free
     region: oregon
     buildCommand: pip install -r requirements.txt
-    startCommand: bash start.sh
+    # wsgi:app initializes the DB at import time, so this works even if
+    # Render falls back to its own gunicorn default command.
+    startCommand: gunicorn wsgi:app --bind 0.0.0.0:$PORT --workers 2 --timeout 60 --access-logfile - --error-logfile -
     healthCheckPath: /login
     envVars:
       # Generated once by Render and kept stable, so Flask session
