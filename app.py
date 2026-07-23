@@ -11,6 +11,13 @@ from database import queries
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 
+# Ensure the SQLite schema and seed data exist at import time. Under a WSGI
+# server (gunicorn) the __main__ block below never runs, so without this the
+# first DB query fails with "no such table". Both functions are idempotent.
+with app.app_context():
+    init_db()
+    seed_db()
+
 EXPENSE_CATEGORIES = (
     "Food", "Transport", "Bills", "Health",
     "Entertainment", "Shopping", "Other",
