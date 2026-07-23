@@ -2,8 +2,10 @@
 
 A lightweight, production-ready personal expense tracking application built with modern web technologies. Built over 2 months with a systematic, test-driven approach.
 
-**Live Demo:** https://spendly-production-97cb.up.railway.app/  
-**Repository:** https://github.com/Amith-Ganta/spendly
+**Live Demo:** https://spendly-render-deploy.onrender.com  
+**Repository:** https://github.com/Amith-Ganta/spendly-fullstack-web-app
+
+> This repository is the live-deployment mirror that runs the app on Render. The primary project repository, with full documentation and history, is linked above.
 
 ---
 
@@ -22,7 +24,7 @@ Spendly is a full-stack web application that allows users to:
 - **Lines of Code:** 2,500+
 - **Test Coverage:** 47 comprehensive tests
 - **Features:** 9 major features (CRUD complete)
-- **Deployment:** Production-ready on Railway
+- **Deployment:** Production-ready on Render
 - **Status:** ✅ Complete & Live
 
 ---
@@ -46,7 +48,7 @@ Spendly is a full-stack web application that allows users to:
 **DevOps:**
 - **Testing:** Pytest with 47 test cases
 - **Version Control:** Git & GitHub
-- **Deployment:** Railway (cloud platform)
+- **Deployment:** Render (cloud platform)
 - **Development:** Claude Code (AI pair programming)
 
 ### Project Structure
@@ -687,9 +689,9 @@ Total: 47 tests ✅ All passing
 - Result: Application accessible externally
 
 **Step 2: Port Configuration**
-- Issue: Hardcoded port 5001 conflicted with Railway's dynamic port
+- Issue: Hardcoded port 5001 conflicted with the platform's dynamic port
 - Fix: Added `port = int(os.environ.get("PORT", 5001))`
-- Result: Railway can assign ports dynamically
+- Result: The platform can assign ports dynamically
 
 **Step 3: Debug Mode**
 - Issue: Debug mode reloading caused double binding
@@ -706,10 +708,10 @@ if __name__ == "__main__":
 ```
 
 ### Deployment Environment:
-- **Platform:** Railway.app (cloud deployment)
+- **Platform:** Render (cloud deployment)
 - **Database:** SQLite (no external DB needed)
 - **Uptime:** 24/7 production availability
-- **Live URL:** https://spendly-production-97cb.up.railway.app/
+- **Live URL:** https://spendly-render-deploy.onrender.com
 - **Status:** ✅ Fully operational
 
 ---
@@ -833,7 +835,7 @@ pytest -s
 
 ## 🔗 Live Demo
 
-**Try it now:** https://spendly-production-97cb.up.railway.app/
+**Try it now:** https://spendly-render-deploy.onrender.com
 
 ### Demo Credentials:
 ```
@@ -905,7 +907,7 @@ With 13+ years of professional experience in:
 - **Frontend:** HTML, CSS, Vanilla JavaScript, responsive design
 - **Backend:** Flask, Python, RESTful API design
 - **Database:** SQL, SQLite, database optimization
-- **DevOps:** Git, GitHub, cloud deployment (Railway)
+- **DevOps:** Git, GitHub, cloud deployment (Render)
 - **Testing:** Pytest, test-driven development
 - **Security:** Authentication, authorization, input validation
 
@@ -939,6 +941,6 @@ Future enhancements planned:
 
 **Last Updated:** May 25, 2026  
 **Project Status:** ✅ Production Ready  
-**Live URL:** https://spendly-production-97cb.up.railway.app/
+**Live URL:** https://spendly-render-deploy.onrender.com
 
 Made with ❤️ using Flask, SQLite, and best practices.
